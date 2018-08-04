@@ -111,8 +111,21 @@ services:
 
   db:
     image: openlmis/postgres:${OL_POSTGRES_VERSION}
+    ports:
+       - 5433:5432
     env_file: settings.env
     depends_on: [consul]
+
+  mongo:
+    image: mongo
+    depends_on: [consul]
+
+  hearth:
+    image: openlmis/openlmis-hearth
+    depends_on: [consul, mongo]
+    volumes:
+      - 'service-config:/config'
+
 
   log:
     image: openlmis/rsyslog:${OL_RSYSLOG_VERSION}
